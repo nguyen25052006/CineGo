@@ -1,13 +1,59 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MovieController;
 
-Route::get('/', function () {
-    return redirect()->route('admin.movies.index');
-});
+/*
+|--------------------------------------------------------------------------
+| Trang chủ
+|--------------------------------------------------------------------------
+*/
 
-// Định tuyến phân hệ Quản lý Phim của Vy - Khớp 100% với file Controller
-Route::get('/admin/movies', [MovieController::class, 'index'])->name('admin.movies.index');
-Route::get('/admin/movies/create', [MovieController::class, 'create'])->name('admin.movies.create');
-Route::post('/admin/movies', [MovieController::class, 'store'])->name('admin.movies.store');
+Route::get('/', function () {
+    return view('home');
+})->name('home');
+
+
+/*
+|--------------------------------------------------------------------------
+| Authentication
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/login', [AuthController::class, 'showLogin'])
+    ->name('login');
+
+Route::post('/login', [AuthController::class, 'login'])
+    ->name('login.authenticate');
+
+Route::get('/register', [AuthController::class, 'showRegister'])
+    ->name('register');
+
+Route::post('/register', [AuthController::class, 'register'])
+    ->name('register.store');
+
+Route::post('/logout', [AuthController::class, 'logout'])
+    ->name('logout');
+
+
+/*
+|--------------------------------------------------------------------------
+| Admin - Movie
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware(['auth', 'admin'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
+
+        Route::get('/movies', [MovieController::class, 'index'])
+            ->name('movies.index');
+
+        Route::get('/movies/create', [MovieController::class, 'create'])
+            ->name('movies.create');
+
+        Route::post('/movies', [MovieController::class, 'store'])
+            ->name('movies.store');
+    });

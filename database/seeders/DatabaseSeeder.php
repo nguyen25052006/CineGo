@@ -15,11 +15,28 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // Tài khoản Admin
+        User::updateOrCreate(
+            [
+                'email' => 'admin@cinego.com',
+            ],
+            [
+                'name' => 'Admin CineGo',
+                'password' => '12345678',
+                'role' => 'admin',
+            ]
+        );
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        // Tài khoản User
+        User::updateOrCreate(
+            [
+                'email' => 'user@cinego.com',
+            ],
+            [
+                'name' => 'User CineGo',
+                'password' => '12345678',
+                'role' => 'user',
+            ]
+        );
     }
 }
