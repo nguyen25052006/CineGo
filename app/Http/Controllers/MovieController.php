@@ -10,6 +10,84 @@ class MovieController extends Controller
     /**
      * 1. Hiển thị danh sách phim kèm tính năng Tìm Kiếm (Phần của Vy & Hữu Thịnh)
      */
+    
+    /*
+    |--------------------------------------------------------------------------
+    | Trang chủ
+    |--------------------------------------------------------------------------
+    */
+
+    public function home()
+    {
+        // Lấy tối đa 4 phim đang chiếu từ database.
+        $movies = Movie::where('status', 'showing')
+            ->latest()
+            ->take(4)
+            ->get();
+
+        return view('home', compact('movies'));
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Danh sách phim công khai
+    |--------------------------------------------------------------------------
+    */
+
+    public function publicIndex(Request $request)
+    {
+        // Khởi tạo truy vấn danh sách phim.
+        $query = Movie::query()
+            ->whereIn('status', ['showing', 'coming_soon']);
+
+        // Tìm phim theo tên.
+        if ($request->filled('search')) {
+            $query->where(
+                'title',
+                'like',
+                '%' . $request->input('search') . '%'
+            );
+        }
+
+        // Lọc phim theo thể loại.
+        if ($request->filled('genre')) {
+            $query->where(
+                'genre',
+                'like',
+                '%' . $request->input('genre') . '%'
+            );
+        }
+
+        // Mỗi trang tối đa 12 phim.
+        $movies = $query->latest()
+            ->paginate(12)
+            ->withQueryString();
+
+        return view('movies.index', compact('movies'));
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Chi tiết phim và danh sách suất chiếu
+    |--------------------------------------------------------------------------
+    */
+
+    public function show(Movie $movie)
+    {
+        // Lấy các suất chiếu đang hoạt động của đúng bộ phim.
+        $showtimes = $movie->showtimes()
+            ->where('status', 'active')
+            ->whereDate('show_date', '>=', today())
+            ->orderBy('show_date')
+            ->orderBy('start_time')
+            ->get();
+
+        return view('movies.show', compact('movie', 'showtimes'));
+    }
+
+
     public function index(Request $request)
     {
         // Nhận dữ liệu từ ô tìm kiếm tên phim

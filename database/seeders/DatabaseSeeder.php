@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'name' => 'Admin CineGo',
-                'password' => '12345678',
+                'password' => bcrypt('12345678'),
                 'role' => 'admin',
             ]
         );
@@ -34,7 +34,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'name' => 'User CineGo',
-                'password' => '12345678',
+                'password' => bcrypt('12345678'),
                 'role' => 'user',
             ]
         );

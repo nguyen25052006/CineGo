@@ -82,14 +82,14 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {{ request()->is('movies*') ? 'active text-warning fw-bold' : '' }}" href="{{ url('/movies') }}">
+                        <a class="nav-link {{ request()->is('movies*') ? 'active text-warning fw-bold' : '' }}" href="{{ route('movies.index') }}">
                             <i class="bi bi-collection-play me-1"></i>Danh sách phim
                         </a>
                     </li>
                 </ul>
 
                 <!-- TÌM KIẾM NHANH -->
-                <form class="d-flex me-3" action="{{ url('/movies') }}" method="GET">
+                <form class="d-flex me-3" action="{{ route('movies.index') }}" method="GET">
                     <div class="input-group input-group-sm">
                         <input class="form-control bg-dark text-white border-secondary" type="search" name="search" placeholder="Tìm tên phim..." value="{{ request('search') }}">
                         <button class="btn btn-outline-secondary text-white" type="submit">
@@ -109,7 +109,7 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
                             <li>
-                                <a class="dropdown-item" href="{{ url('/bookings/history') }}">
+                                <a class="dropdown-item" href="{{ route('booking.history') }}">
                                     <i class="bi bi-ticket-perforated me-2"></i>Vé của tôi
                                 </a>
                             </li>

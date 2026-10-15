@@ -1,179 +1,405 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
-@section('title', 'CineGo - Danh Sách Phim Chiếu Rạp')
+@section('title', 'Quản lý phim | CineGo')
+@section('page_title', 'Quản lý phim')
 
 @section('content')
-<div class="container">
-    <!-- TIÊU ĐỀ & THANH LỌC / TÌM KIẾM -->
-    <div class="row align-items-center mb-4 g-3">
-        <div class="col-md-5">
-            <h3 class="fw-bold border-start border-4 border-danger ps-3 mb-0">Danh Sách Phim</h3>
-            <p class="text-secondary small mb-0 mt-1">Cập nhật những bộ phim bom tấn mới nhất tại hệ thống rạp CineGo</p>
+
+    <!-- TIÊU ĐỀ TRANG -->
+    <div class="d-flex flex-wrap justify-content-between
+                align-items-center gap-3 mb-4">
+
+        <div>
+            <div class="page-label">Thư viện phim</div>
+
+            <h2 class="page-heading">Danh sách phim</h2>
+
+            <p class="page-description">
+                Theo dõi và quản lý danh sách phim trong hệ thống CineGo.
+            </p>
         </div>
-        <div class="col-md-7">
-            <form action="{{ url('/movies') }}" method="GET" class="row g-2 justify-content-md-end">
-                <!-- Lọc theo thể loại -->
-                <div class="col-auto">
-                    <select name="genre" class="form-select bg-dark text-white border-secondary">
-                        <option value="">Tất cả thể loại</option>
-                        <option value="action" {{ request('genre') == 'action' ? 'selected' : '' }}>Hành Động</option>
-                        <option value="horror" {{ request('genre') == 'horror' ? 'selected' : '' }}>Kinh Dị</option>
-                        <option value="comedy" {{ request('genre') == 'comedy' ? 'selected' : '' }}>Hài Hước</option>
-                        <option value="sci-fi" {{ request('genre') == 'sci-fi' ? 'selected' : '' }}>Khoa Học Viễn Tưởng</option>
-                        <option value="romance" {{ request('genre') == 'romance' ? 'selected' : '' }}>Tình Cảm</option>
-                    </select>
-                </div>
-                <!-- Ô tìm kiếm -->
-                <div class="col-auto">
-                    <div class="input-group">
-                        <input type="text" name="search" class="form-control bg-dark text-white border-secondary" placeholder="Tên phim..." value="{{ request('search') }}">
-                        <button class="btn btn-cinego" type="submit">
-                            <i class="bi bi-funnel-fill me-1"></i> Lọc
-                        </button>
-                    </div>
-                </div>
-            </form>
-        </div>
+
+        <a href="{{ route('admin.movies.create') }}"
+           class="btn-cinego">
+
+            <i class="bi bi-plus-lg"></i>
+            Thêm phim mới
+
+        </a>
+
     </div>
 
-    <!-- DANH SÁCH THẺ PHIM (GRID MOCKUP) -->
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 mb-5">
-        <!-- Phim 1 -->
-        <div class="col">
-            <div class="card card-custom h-100 rounded-3 overflow-hidden">
-                <div class="position-relative">
-                    <img src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=500" class="card-img-top" alt="Poster" style="height: 340px; object-fit: cover;">
-                    <span class="position-absolute top-0 end-0 m-2 badge bg-danger">T18</span>
-                </div>
-                <div class="card-body d-flex flex-column">
-                    <span class="text-danger small fw-bold mb-1">Hành Động, Viễn Tưởng</span>
-                    <h5 class="card-title fw-bold text-truncate" title="Chiến Binh Ánh Sáng">Chiến Binh Ánh Sáng</h5>
-                    <div class="d-flex justify-content-between text-secondary small mb-3">
-                        <span><i class="bi bi-clock me-1"></i>120 phút</span>
-                        <span><i class="bi bi-star-fill text-warning me-1"></i>8.8</span>
-                    </div>
-                    <div class="mt-auto d-grid gap-2">
-                        <a href="{{ url('/movies/1') }}" class="btn btn-sm btn-outline-light">Xem Chi Tiết</a>
+
+    <!-- THỐNG KÊ -->
+    <div class="row g-3 mb-4">
+
+        <div class="col-12 col-sm-6 col-xl-4">
+            <div class="admin-card stat-card">
+
+                <div>
+                    <div class="stat-label">Số kết quả tìm thấy</div>
+
+                    <div class="stat-number">
+                        {{ $movies->total() }}
                     </div>
                 </div>
+
+                <div class="stat-icon">
+                    <i class="bi bi-film"></i>
+                </div>
+
             </div>
         </div>
 
-        <!-- Phim 2 -->
-        <div class="col">
-            <div class="card card-custom h-100 rounded-3 overflow-hidden">
-                <div class="position-relative">
-                    <img src="https://images.unsplash.com/photo-1574267432553-4b4628081c31?q=80&w=500" class="card-img-top" alt="Poster" style="height: 340px; object-fit: cover;">
-                    <span class="position-absolute top-0 end-0 m-2 badge bg-primary">T13</span>
-                </div>
-                <div class="card-body d-flex flex-column">
-                    <span class="text-primary small fw-bold mb-1">Khoa Học Viễn Tưởng</span>
-                    <h5 class="card-title fw-bold text-truncate" title="Vũ Trụ Vô Tận">Vũ Trụ Vô Tận</h5>
-                    <div class="d-flex justify-content-between text-secondary small mb-3">
-                        <span><i class="bi bi-clock me-1"></i>145 phút</span>
-                        <span><i class="bi bi-star-fill text-warning me-1"></i>9.0</span>
-                    </div>
-                    <div class="mt-auto d-grid gap-2">
-                        <a href="{{ url('/movies/2') }}" class="btn btn-sm btn-outline-light">Xem Chi Tiết</a>
+        <div class="col-12 col-sm-6 col-xl-4">
+            <div class="admin-card stat-card">
+
+                <div>
+                    <div class="stat-label">Phim trên trang này</div>
+
+                    <div class="stat-number">
+                        {{ $movies->count() }}
                     </div>
                 </div>
+
+                <div class="stat-icon"
+                     style="background:#dbeafe;color:#2563eb;">
+                    <i class="bi bi-collection"></i>
+                </div>
+
             </div>
         </div>
 
-        <!-- Phim 3 -->
-        <div class="col">
-            <div class="card card-custom h-100 rounded-3 overflow-hidden">
-                <div class="position-relative">
-                    <img src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=500" class="card-img-top" alt="Poster" style="height: 340px; object-fit: cover;">
-                    <span class="position-absolute top-0 end-0 m-2 badge bg-success">P - Mọi lứa tuổi</span>
-                </div>
-                <div class="card-body d-flex flex-column">
-                    <span class="text-warning small fw-bold mb-1">Hài Hước, Phiêu Lưu</span>
-                    <h5 class="card-title fw-bold text-truncate" title="Chuyến Đi Bất Ổn">Chuyến Đi Bất Ổn</h5>
-                    <div class="d-flex justify-content-between text-secondary small mb-3">
-                        <span><i class="bi bi-clock me-1"></i>98 phút</span>
-                        <span><i class="bi bi-star-fill text-warning me-1"></i>7.9</span>
-                    </div>
-                    <div class="mt-auto d-grid gap-2">
-                        <a href="{{ url('/movies/3') }}" class="btn btn-sm btn-outline-light">Xem Chi Tiết</a>
+        <div class="col-12 col-sm-6 col-xl-4">
+            <div class="admin-card stat-card">
+
+                <div>
+                    <div class="stat-label">Trang hiện tại</div>
+
+                    <div class="stat-number">
+                        {{ $movies->currentPage() }}
+                        <span class="fs-6 text-secondary">
+                            / {{ $movies->lastPage() }}
+                        </span>
                     </div>
                 </div>
+
+                <div class="stat-icon"
+                     style="background:#fef3c7;color:#a16207;">
+                    <i class="bi bi-files"></i>
+                </div>
+
             </div>
         </div>
 
-        <!-- Phim 4 -->
-        <div class="col">
-            <div class="card card-custom h-100 rounded-3 overflow-hidden">
-                <div class="position-relative">
-                    <img src="https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=500" class="card-img-top" alt="Poster" style="height: 340px; object-fit: cover;">
-                    <span class="position-absolute top-0 end-0 m-2 badge bg-danger">T18</span>
-                </div>
-                <div class="card-body d-flex flex-column">
-                    <span class="text-danger small fw-bold mb-1">Kinh Dị, Giật Gân</span>
-                    <h5 class="card-title fw-bold text-truncate" title="Đêm Không Ngủ">Đêm Không Ngủ</h5>
-                    <div class="d-flex justify-content-between text-secondary small mb-3">
-                        <span><i class="bi bi-clock me-1"></i>105 phút</span>
-                        <span><i class="bi bi-star-fill text-warning me-1"></i>8.2</span>
-                    </div>
-                    <div class="mt-auto d-grid gap-2">
-                        <a href="{{ url('/movies/4') }}" class="btn btn-sm btn-outline-light">Xem Chi Tiết</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Phim 5 -->
-        <div class="col">
-            <div class="card card-custom h-100 rounded-3 overflow-hidden">
-                <div class="position-relative">
-                    <img src="https://images.unsplash.com/photo-1478720568477-152d9b164e26?q=80&w=500" class="card-img-top" alt="Poster" style="height: 340px; object-fit: cover;">
-                    <span class="position-absolute top-0 end-0 m-2 badge bg-primary">T16</span>
-                </div>
-                <div class="card-body d-flex flex-column">
-                    <span class="text-info small fw-bold mb-1">Bí Ẩn, Tội Phạm</span>
-                    <h5 class="card-title fw-bold text-truncate" title="Mật Mã Vô Hình">Mật Mã Vô Hình</h5>
-                    <div class="d-flex justify-content-between text-secondary small mb-3">
-                        <span><i class="bi bi-clock me-1"></i>115 phút</span>
-                        <span><i class="bi bi-star-fill text-warning me-1"></i>8.5</span>
-                    </div>
-                    <div class="mt-auto d-grid gap-2">
-                        <a href="{{ url('/movies/5') }}" class="btn btn-sm btn-outline-light">Xem Chi Tiết</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Phim 6 -->
-        <div class="col">
-            <div class="card card-custom h-100 rounded-3 overflow-hidden">
-                <div class="position-relative">
-                    <img src="https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?q=80&w=500" class="card-img-top" alt="Poster" style="height: 340px; object-fit: cover;">
-                    <span class="position-absolute top-0 end-0 m-2 badge bg-success">P - Mọi lứa tuổi</span>
-                </div>
-                <div class="card-body d-flex flex-column">
-                    <span class="text-warning small fw-bold mb-1">Hoạt Hình, Gia Đình</span>
-                    <h5 class="card-title fw-bold text-truncate" title="Xứ Sở Thần Tiên">Xứ Sở Thần Tiên</h5>
-                    <div class="d-flex justify-content-between text-secondary small mb-3">
-                        <span><i class="bi bi-clock me-1"></i>92 phút</span>
-                        <span><i class="bi bi-star-fill text-warning me-1"></i>8.9</span>
-                    </div>
-                    <div class="mt-auto d-grid gap-2">
-                        <a href="{{ url('/movies/6') }}" class="btn btn-sm btn-outline-light">Xem Chi Tiết</a>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 
-    <!-- PHÂN TRANG (PAGINATION MOCKUP) -->
-    <nav class="d-flex justify-content-center">
-        <ul class="pagination">
-            <li class="page-item disabled"><a class="page-link bg-dark text-secondary border-secondary" href="#">Trước</a></li>
-            <li class="page-item active"><a class="page-link bg-danger text-white border-danger" href="#">1</a></li>
-            <li class="page-item"><a class="page-link bg-dark text-white border-secondary" href="#">2</a></li>
-            <li class="page-item"><a class="page-link bg-dark text-white border-secondary" href="#">3</a></li>
-            <li class="page-item"><a class="page-link bg-dark text-white border-secondary" href="#">Sau</a></li>
-        </ul>
-    </nav>
-</div>
+
+    <!-- TÌM KIẾM -->
+    <div class="admin-card p-3 p-md-4 mb-4">
+
+        <form action="{{ route('admin.movies.index') }}"
+              method="GET"
+              class="row g-3 align-items-end">
+
+            <div class="col-12 col-md-8">
+
+                <label for="search"
+                       class="form-label fw-bold small">
+                    Tìm kiếm phim
+                </label>
+
+                <div class="input-group">
+
+                    <span class="input-group-text bg-white"
+                          style="border-color:#dfe4ed;">
+                        <i class="bi bi-search text-secondary"></i>
+                    </span>
+
+                    <input
+                        type="text"
+                        id="search"
+                        name="search"
+                        class="form-control"
+                        placeholder="Nhập tên phim cần tìm..."
+                        value="{{ request('search') }}"
+                    >
+
+                </div>
+
+            </div>
+
+            <div class="col-6 col-md-2">
+
+                <button type="submit"
+                        class="btn-cinego w-100">
+
+                    <i class="bi bi-search"></i>
+                    Tìm kiếm
+
+                </button>
+
+            </div>
+
+            <div class="col-6 col-md-2">
+
+                <a href="{{ route('admin.movies.index') }}"
+                   class="btn-admin-light w-100">
+
+                    <i class="bi bi-arrow-counterclockwise"></i>
+                    Làm mới
+
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+
+    <!-- BẢNG PHIM -->
+    <div class="admin-card overflow-hidden">
+
+        <div class="d-flex flex-wrap justify-content-between
+                    align-items-center gap-2 p-3 p-md-4
+                    border-bottom">
+
+            <div>
+                <h5 class="fw-bold mb-1">
+                    <i class="bi bi-list-ul me-2"
+                       style="color:#e11d48;"></i>
+                    Kho phim CineGo
+                </h5>
+
+                <p class="text-secondary small mb-0">
+                    Danh sách phim được lấy từ cơ sở dữ liệu.
+                </p>
+            </div>
+
+            <span class="badge rounded-pill text-bg-light border px-3 py-2">
+                {{ $movies->total() }} phim
+            </span>
+
+        </div>
+
+
+        <div class="table-responsive">
+
+            <table class="table movie-table align-middle">
+
+                <thead>
+                    <tr>
+                        <th style="width:65px;">STT</th>
+                        <th style="min-width:250px;">Thông tin phim</th>
+                        <th>Thể loại</th>
+                        <th>Thời lượng</th>
+                        <th>Khởi chiếu</th>
+                        <th>Trạng thái</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @forelse($movies as $key => $movie)
+
+                        <tr>
+
+                            <!-- STT -->
+                            <td class="text-secondary fw-semibold">
+                                {{ $movies->firstItem() + $key }}
+                            </td>
+
+
+                            <!-- POSTER VÀ TÊN PHIM -->
+                            <td>
+
+                                <div class="d-flex align-items-center gap-3">
+
+                                    @if($movie->poster)
+
+                                        <img
+                                            src="{{ $movie->poster }}"
+                                            alt="{{ $movie->title }}"
+                                            class="movie-poster"
+                                        >
+
+                                    @else
+
+                                        <div class="movie-poster d-flex
+                                                    align-items-center
+                                                    justify-content-center">
+
+                                            <i class="bi bi-film fs-3
+                                                      text-secondary"></i>
+
+                                        </div>
+
+                                    @endif
+
+                                    <div>
+                                        <div class="movie-title">
+                                            {{ $movie->title }}
+                                        </div>
+
+                                        <div class="movie-id">
+                                            Mã phim: #{{ $movie->id }}
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+
+                            <!-- THỂ LOẠI -->
+                            <td>
+                                <span class="badge rounded-pill
+                                             text-bg-light border
+                                             px-3 py-2">
+
+                                    {{ $movie->genre }}
+
+                                </span>
+                            </td>
+
+
+                            <!-- THỜI LƯỢNG -->
+                            <td class="text-nowrap">
+
+                                <i class="bi bi-clock me-1
+                                          text-secondary"></i>
+
+                                {{ $movie->duration_minutes }} phút
+
+                            </td>
+
+
+                            <!-- NGÀY KHỞI CHIẾU -->
+                            <td class="text-nowrap">
+
+                                @if($movie->release_date)
+                                    {{ \Carbon\Carbon::parse($movie->release_date)->format('d/m/Y') }}
+                                @else
+                                    <span class="text-secondary">Chưa có</span>
+                                @endif
+
+                            </td>
+
+
+                            <!-- TRẠNG THÁI -->
+                            <td>
+
+                                @if($movie->status == 'showing')
+
+                                    <span class="status-badge status-showing">
+                                        <i class="bi bi-circle-fill"
+                                           style="font-size:7px;"></i>
+                                        Đang chiếu
+                                    </span>
+
+                                @elseif($movie->status == 'coming_soon')
+
+                                    <span class="status-badge status-coming">
+                                        <i class="bi bi-clock"
+                                           style="font-size:12px;"></i>
+                                        Sắp chiếu
+                                    </span>
+
+                                @else
+
+                                    <span class="status-badge status-ended">
+                                        <i class="bi bi-check-circle"
+                                           style="font-size:12px;"></i>
+                                        Đã kết thúc
+                                    </span>
+
+                                @endif
+
+                            </td>
+
+                        </tr>
+
+                    @empty
+
+                        <tr>
+                            <td colspan="6">
+
+                                <div class="empty-state">
+
+                                    <div class="empty-icon">
+                                        <i class="bi bi-film"></i>
+                                    </div>
+
+                                    <h5 class="fw-bold mb-2">
+                                        @if(request('search'))
+                                            Không tìm thấy phim phù hợp
+                                        @else
+                                            Kho phim đang trống
+                                        @endif
+                                    </h5>
+
+                                    <p class="text-secondary mb-4">
+                                        @if(request('search'))
+                                            Hãy thử tìm bằng một tên phim khác.
+                                        @else
+                                            Bạn chưa thêm phim nào vào CineGo.
+                                            Hãy tạo bộ phim đầu tiên của mình.
+                                        @endif
+                                    </p>
+
+                                    @if(request('search'))
+
+                                        <a href="{{ route('admin.movies.index') }}"
+                                           class="btn-admin-light">
+                                            Xóa bộ lọc
+                                        </a>
+
+                                    @else
+
+                                        <a href="{{ route('admin.movies.create') }}"
+                                           class="btn-cinego">
+
+                                            <i class="bi bi-plus-lg"></i>
+                                            Thêm phim đầu tiên
+
+                                        </a>
+
+                                    @endif
+
+                                </div>
+
+                            </td>
+                        </tr>
+
+                    @endforelse
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- PHÂN TRANG -->
+        @if($movies->hasPages())
+
+            <div class="d-flex flex-wrap justify-content-between
+                        align-items-center gap-3 p-3 p-md-4
+                        border-top">
+
+                <small class="text-secondary">
+                    Hiển thị {{ $movies->firstItem() }}
+                    – {{ $movies->lastItem() }}
+                    trong {{ $movies->total() }} kết quả
+                </small>
+
+                {{ $movies->withQueryString()->links() }}
+
+            </div>
+
+        @endif
+
+    </div>
+
 @endsection
